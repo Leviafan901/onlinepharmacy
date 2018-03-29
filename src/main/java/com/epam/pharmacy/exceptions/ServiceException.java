@@ -1,6 +1,6 @@
 package com.epam.pharmacy.exceptions;
 
-public class ServiceException extends Exception {
+public class ServiceException extends PharmacyException {
 
     public ServiceException(String message, Exception cause) {
         super(message, cause);

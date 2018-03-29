@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epam.pharmacy.connection.ConnectionPool;
 import com.epam.pharmacy.exceptions.ConnectionException;
-import com.epam.pharmacy.exceptions.PersistException;
+import com.epam.pharmacy.exceptions.DaoException;
 
 /**
  * The class is intended for managing connections, namely the distribution and closing of connections.
@@ -36,8 +36,20 @@ public class DaoCreator implements AutoCloseable {
         connection = connectionPool.getConnection();
     }
     
-    public UserDao getUserDao() throws PersistException {
+    public UserDao getUserDao() throws DaoException {
         return new UserDao(connection);
+    }
+    
+    public MedicineDao getMedicineDao() throws DaoException {
+        return new MedicineDao(connection);
+    }
+    
+    public OrderDao getOrderDao() throws DaoException {
+        return new OrderDao(connection);
+    }
+    
+    public OrderMedicineDao getOrderMedicineDao() throws DaoException {
+        return new OrderMedicineDao(connection);
     }
     
     /**
@@ -54,7 +66,7 @@ public class DaoCreator implements AutoCloseable {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            LOGGER.error("Can't starting date transaction", e);
+            LOGGER.error("Can't starting date transaction", e);//
         }
     }
 
@@ -66,7 +78,7 @@ public class DaoCreator implements AutoCloseable {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            LOGGER.error("Can't committing date transaction", e);
+            LOGGER.error("Can't committing date transaction", e);//
         }
     }
 
@@ -78,12 +90,12 @@ public class DaoCreator implements AutoCloseable {
             LOGGER.debug("Call rollback transaction");
             connection.rollback();
         } catch (SQLException e) {
-            LOGGER.error("Can't rollback data transaction", e);
+            LOGGER.error("Can't rollback data transaction", e);//
         }
     }
     
 	@Override
-	public void close() throws Exception {
+	public void close() throws SQLException {
 		returnConnection();
 	}
 }

@@ -1,14 +1,15 @@
 package com.epam.pharmacy.connection;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epam.pharmacy.exceptions.ConnectionException;
 import com.epam.pharmacy.exceptions.ResourcesException;
 
 /**
@@ -16,10 +17,17 @@ import com.epam.pharmacy.exceptions.ResourcesException;
  *
  * @author Sosenkov Alexei
  */
-public class ResourcesQueue<T> {
+public class ResourcesList<T> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResourcesQueue.class);
-   
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResourcesList.class);
+	
+	private static final int HEAD_ELEMENT = 0;
+	
+	/**
+	 * Locker for concurrent resources
+	 */
+	private static Lock locker = new ReentrantLock();
+	
 	/**
      * Field - restrict access to the resource.
      */
@@ -28,7 +36,7 @@ public class ResourcesQueue<T> {
     /**
      * Field - storage of the list of initialized connections
      */
-    private Queue<T> queue = new ConcurrentLinkedQueue<>();
+    private List<T> resourceList = new LinkedList<>();
     
     /**
      * Field - time waiting for a special connection
@@ -41,7 +49,7 @@ public class ResourcesQueue<T> {
      * @param count   - semaphore counter
      * @param timeOut - time waiting for a connection
      */
-    public ResourcesQueue(int count, int timeOut) {
+    public ResourcesList(int count, int timeOut) {
         semaphore = new Semaphore(count, true);
         this.timeOut = timeOut;
     }
@@ -55,10 +63,9 @@ public class ResourcesQueue<T> {
         try {
             if (semaphore.tryAcquire(timeOut, TimeUnit.SECONDS)) {
                 LOGGER.debug("The connection was taken");
-                return queue.poll();
+                return resourceList.remove(HEAD_ELEMENT);
             }
         } catch (InterruptedException e) {
-            LOGGER.warn("Didn't wait for connect", e);
             throw new ResourcesException("Didn't wait for connect", e);
         }
         throw new ResourcesException("Didn't wait for connect");
@@ -67,17 +74,27 @@ public class ResourcesQueue<T> {
     /**
      * Returns the connection back to the list of initialized connections
      */
-    public void returnResource(T res) {
-
-        queue.add(res);
-        semaphore.release();
+    public void returnResource(T resource) {
+        locker.lock();
+        try {
+	        resourceList.add(resource);
+	        semaphore.release();
+	        LOGGER.debug("The connection was added back!");
+        } finally {
+        	locker.unlock();
+        }
     }
 
     /**
      * Adds an initialized connection to the list
      */
-    public void addResource(T t) {
-        queue.add(t);
+    public void addResource(T resource) {
+    	locker.lock();
+        try {
+        	resourceList.add(resource);
+        } finally {
+        	locker.unlock();
+        }
     }
 
     /**
@@ -86,7 +103,7 @@ public class ResourcesQueue<T> {
      * @return List size
      */
     public int size() {
-        return queue.size();
+        return resourceList.size();
     }
 	
 	/**
@@ -94,7 +111,12 @@ public class ResourcesQueue<T> {
      *
      * @return Returns a list
      */
-    public Queue<T> getResources() {
-        return queue;
+    public List<T> getResources() {
+    	locker.lock();
+        try {
+        	return resourceList;
+        } finally {
+        	locker.unlock();
+        }
     }
 }

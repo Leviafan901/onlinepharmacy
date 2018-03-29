@@ -1,11 +1,11 @@
 package com.epam.pharmacy.domain;
 
-import java.io.Serializable;
+import java.math.BigDecimal;
 
-import com.epam.pharmacy.dao.Identified;
+import com.epam.pharmacy.dao.Identifiable;
 import com.epam.pharmacy.domain.enumeration.Role;
 
-public class User implements Serializable, Identified<Long> {
+public class User implements Identifiable {
 
 	private Long id;
 	private String name;
@@ -76,46 +76,41 @@ public class User implements Serializable, Identified<Long> {
 	}
 	
 	@Override
-	public boolean equals(Object object) {//
-		if (this == object)
+	public boolean equals(Object obj) {
+		if (this == obj)
 			return true;
-		if (object == null)
+		if (obj == null)
 			return false;
-		if (getClass() != object.getClass())
+		if (getClass() != obj.getClass())
 			return false;
-		User otherUser = (User) object;
+		User other = (User) obj;
 		if (id == null) {
-			if (otherUser.id != null)
+			if (other.id != null)
 				return false;
-		} else if (!id.equals(otherUser.id))
+		} else if (!id.equals(other.id))
 			return false;
 		if (lastname == null) {
-			if (otherUser.lastname != null)
+			if (other.lastname != null)
 				return false;
-		} else if (!lastname.equals(otherUser.lastname))
+		} else if (!lastname.equals(other.lastname))
 			return false;
 		if (login == null) {
-			if (otherUser.login != null)
+			if (other.login != null)
 				return false;
-		} else if (!login.equals(otherUser.login))
+		} else if (!login.equals(other.login))
 			return false;
 		if (name == null) {
-			if (otherUser.name != null)
+			if (other.name != null)
 				return false;
-		} else if (!name.equals(otherUser.name))
+		} else if (!name.equals(other.name))
 			return false;
 		if (password == null) {
-			if (otherUser.password != null)
+			if (other.password != null)
 				return false;
-		} else if (!password.equals(otherUser.password))
+		} else if (!password.equals(other.password))
 			return false;
-		if (role != otherUser.role)
+		if (role != other.role)
 			return false;
 		return true;
-	}
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", lastname=" + lastname + ", login=" + login + ", password="
-				+ password + ", role=" + role + "]";
 	}
 }

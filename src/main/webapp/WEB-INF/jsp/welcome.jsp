@@ -17,6 +17,9 @@
 <style>
         <jsp:directive.include file="/WEB-INF/css/style.css"/>
 </style>
+<script>
+        <jsp:directive.include file="/WEB-INF/js/dialog.js"/>
+</script>
 </head>
 <body>
 
@@ -33,9 +36,9 @@
 				<span>${explanaition}</span>
 			</div>
 			<div class="content">
-				<input name="login" type="text" class="input username" value="login" onfocus="this.value=''" />
-				<input name="password" type="password" class="input password" value="password"
-					onfocus="this.value=''" />
+				<input name="login" type="text" id="input_username" class="input username" placeholder="login" onfocus="this.value=''" required />
+				<input name="password" type="password" id="input_password" class="input password" placeholder="password"
+					onfocus="this.value=''" required />
 			</div>
 			<div class="footer">
 				<input type="submit" value="${login}" class="button" />

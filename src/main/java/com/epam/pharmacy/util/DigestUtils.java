@@ -11,10 +11,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sosenkov Alexei
  */
-public class Encoder {
+public class DigestUtils {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(DigestUtils.class);
+	
 	private static final String HASH_TYPE = "MD5";
-	private static final Logger LOGGER = LoggerFactory.getLogger(Encoder.class);
 
     /**
      * Encrypts a string to MD5 format

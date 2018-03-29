@@ -1,11 +1,10 @@
 package com.epam.pharmacy.domain;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.epam.pharmacy.dao.Identified;
+import com.epam.pharmacy.dao.Identifiable;
 
-public class Medicine implements Serializable, Identified<Long> {
+public class Medicine implements Identifiable {
 
 	private Long id;
 	private String name;
@@ -14,6 +13,7 @@ public class Medicine implements Serializable, Identified<Long> {
 	private Integer dosageMg;
 	private boolean needPrescription;
 	private BigDecimal price;
+	private boolean deleted;
 	
 	public Long getId() {
 		return id;
@@ -70,6 +70,14 @@ public class Medicine implements Serializable, Identified<Long> {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	@Override
 	public int hashCode() {
@@ -77,6 +85,7 @@ public class Medicine implements Serializable, Identified<Long> {
 		int result = 1;
 		result = prime * result + ((count == null) ? 0 : count.hashCode());
 		result = prime * result + ((countInStore == null) ? 0 : countInStore.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((dosageMg == null) ? 0 : dosageMg.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -104,6 +113,8 @@ public class Medicine implements Serializable, Identified<Long> {
 				return false;
 		} else if (!countInStore.equals(other.countInStore))
 			return false;
+		if (deleted != other.deleted)
+			return false;
 		if (dosageMg == null) {
 			if (other.dosageMg != null)
 				return false;
@@ -127,5 +138,5 @@ public class Medicine implements Serializable, Identified<Long> {
 		} else if (!price.equals(other.price))
 			return false;
 		return true;
-	}	
+	}
 }

@@ -18,6 +18,7 @@ import com.epam.pharmacy.domain.enumeration.Role;
 public class LogoutCommand implements Command {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LogoutCommand.class);
+	
 	private static final String ATTRIBUTE_USER_ID = "userId";
 	private static final String ATTRIBUTE_ROLE = "role";
 	private static final String WELCOME = "welcome";

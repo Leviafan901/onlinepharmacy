@@ -7,10 +7,10 @@ import java.io.Serializable;
  * @author Alexei Sosenkov
  * Interface that identify objects by Long value.
  */
-public interface Identified<PK extends Serializable> {
+public interface Identifiable extends Serializable  {
 
 	/** Return identificator of object */
-    public PK getId();
+    public Long getId();
 
-	public void setId(PK key);
+	public void setId(Long key);
 }

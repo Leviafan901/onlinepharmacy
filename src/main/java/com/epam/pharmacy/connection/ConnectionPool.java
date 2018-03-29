@@ -28,7 +28,7 @@ public class ConnectionPool {
 	private static Lock locker = new ReentrantLock();
 	private final static int CONNECTION_POOL_SIZE = 10;
 	private final static int MAX_AWAIT_TIME = 10;
-	private ResourcesQueue<Connection> connections = null;
+	private ResourcesList<Connection> connections = null;
 
 	private ConnectionPool() throws ConnectionException {
 		init();
@@ -51,7 +51,7 @@ public class ConnectionPool {
 	}
 
 	private void init() throws ConnectionException {
-		connections = new ResourcesQueue<Connection>(CONNECTION_POOL_SIZE, MAX_AWAIT_TIME);
+		connections = new ResourcesList<Connection>(CONNECTION_POOL_SIZE, MAX_AWAIT_TIME);
 		try {
 			while (connections.size() < CONNECTION_POOL_SIZE) {
 				Class.forName(getProperties().getProperty(DRIVER));

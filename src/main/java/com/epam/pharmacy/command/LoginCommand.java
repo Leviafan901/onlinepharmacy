@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.epam.pharmacy.domain.User;
 import com.epam.pharmacy.exceptions.ServiceException;
 import com.epam.pharmacy.services.UserService;
-import com.epam.pharmacy.util.Encoder;
+import com.epam.pharmacy.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,19 +29,24 @@ public class LoginCommand implements Command {
 	private static final String ATTRIBUTE_NAME = "name";
 	private static final String MAIN_PAGE = "main";
 	private static final String LOGIN_ERROR = "login_error";
+	
+	private UserService userService;
 
-    public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        UserService userService = new UserService();
+	public LoginCommand(UserService userService) {
+	    this.userService = userService;
+    }
+
+	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         String login = request.getParameter(LOGIN);
         String password = request.getParameter(PASSWORD);
+        
         try {
-            User user = userService.findUserByLoginAndPassword(login, Encoder.encode(password));
-            boolean isIncorrectUser = user == null;
-            if (!isIncorrectUser) {
+            User user = userService.findUserByLoginAndPassword(login, DigestUtils.encode(password));
+            if (user != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute(ATTRIBUTE_USER_ID, user.getId());
                 session.setAttribute(ATTRIBUTE_ROLE, user.getRole());
-                session.setAttribute(ATTRIBUTE_NAME, user.getName());
+                session.setAttribute(ATTRIBUTE_NAME, user.getName());//
                 LOGGER.info("User by id = {} and role = {} login in system ", user.getId(), user.getRole());
                 return new CommandResult(MAIN_PAGE, true);
             } else {

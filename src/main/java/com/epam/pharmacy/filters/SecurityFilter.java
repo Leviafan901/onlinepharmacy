@@ -105,10 +105,10 @@ public class SecurityFilter implements Filter {
 
         //userAccess.add("/profileEdit");
        // userAccess.add("/email-edit");
-       // userAccess.add("/password-edit");
-        //userAccess.add("/aboutBook");
+    	clientAccess.add("/orders");
+    	clientAccess.add("/make-order");
         clientAccess.add("/main");
-        //userAccess.add("/account");
+        clientAccess.add("/medicines");
         clientAccess.add("/login");
         clientAccess.add("/logout");
         clientAccess.add("/set-language");
@@ -134,7 +134,7 @@ public class SecurityFilter implements Filter {
        // adminAccess.add("/profileEdit");
        // adminAccess.add("/email-edit");
         //adminAccess.add("/password-edit");
-        //adminAccess.add("/aboutBook");
+        adminAccess.add("/medicines");
         adminAccess.add("/main");
        // adminAccess.add("/account");
         adminAccess.add("/login");

@@ -1,32 +1,26 @@
 package com.epam.pharmacy.dao;
 
-import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
-import com.epam.pharmacy.exceptions.PersistException;
+import com.epam.pharmacy.exceptions.DaoException;
 
 /**
  * Unified object to control the perception of objects
  * @param <T> the type of the persistence's object
- * @param <PK> the type of primary key
+ * @param <Long> the type of primary key
  */
-public interface GenericDao<T extends Identified<PK>, PK extends Serializable> {
+public interface GenericDao<T extends Identifiable> {
 
     /** Create new row in DB about object */
-    public T insert(T object) throws PersistException;
+    public T insert(T object) throws DaoException;
 
     /** Return object with row where key or null */
-    public T getByPK(PK key) throws PersistException;
+    public T getById(Long key) throws DaoException;
 
     /** Save persistence of object in DB */
-    public void update(T object) throws PersistException;
-
-    /** Delete row about object from DB */
-    public void delete(T object) throws PersistException;
+    public void update(T object) throws DaoException;
 
     /** Get list of objects which are rows in DB */
-    public List<T> getAll() throws PersistException;
-        
-    /** Close all statements to the DB */
-    public void close() throws PersistException;
+    public List<T> getAll() throws DaoException;
 }

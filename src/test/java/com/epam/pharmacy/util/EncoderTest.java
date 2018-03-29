@@ -11,7 +11,7 @@ public class EncoderTest {
 	@Test
 	public void shouldReturnEncriptedPasswordInMD5WhenGetInsertedPassword() {
 		//when
-		String actualPassword = Encoder.encode(INSERTED_PASSWORD);
+		String actualPassword = DigestUtils.encode(INSERTED_PASSWORD);
 		//then
 		Assert.assertEquals(EXPECTED_PASSWORD, actualPassword);
 	}

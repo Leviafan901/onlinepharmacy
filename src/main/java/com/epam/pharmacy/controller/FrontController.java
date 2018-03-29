@@ -40,7 +40,10 @@ public class FrontController extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) {
-        Command command = commandFactory.getCommand(request);
+    	String method = request.getMethod();
+        String pathInfo = request.getPathInfo();
+        String commandString = method + pathInfo;
+    	Command command = commandFactory.getCommand(commandString);
         CommandResult result = command.execute(request, response);
         PageNavigator view = new PageNavigator(request, response);
         view.navigate(result);

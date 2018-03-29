@@ -1,12 +1,16 @@
 package com.epam.pharmacy.services;
 
 
+import java.sql.SQLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epam.pharmacy.dao.DaoCreator;
 import com.epam.pharmacy.dao.UserDao;
 import com.epam.pharmacy.domain.User;
+import com.epam.pharmacy.exceptions.ConnectionException;
+import com.epam.pharmacy.exceptions.DaoException;
 import com.epam.pharmacy.exceptions.ServiceException;
 
 public class UserService {
@@ -26,12 +30,11 @@ public class UserService {
 	public User findUserByLoginAndPassword(String login, String password)
 			throws ServiceException {
 		User user = null;
-		try (DaoCreator daoFactory = new DaoCreator()) {
-			UserDao userDao = daoFactory.getUserDao();
-			user = userDao.getUsersByLoginAndPassword(login, password);
-            userDao.close();
+		try (DaoCreator daoCreator = new DaoCreator()) {
+			UserDao userDao = daoCreator.getUserDao();
+			user = userDao.getUserByLoginAndPassword(login, password);
 			LOGGER.info("Find customer by login and password where login/password equals: {} ****", login);
-		} catch (Exception e) {
+		} catch (DaoException | ConnectionException | SQLException e) {
 			throw new ServiceException("can't find by login and password customer", e);
 		}
 		return user;

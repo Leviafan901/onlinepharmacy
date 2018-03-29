@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="com.epam.pharmacy.util.EncoderTest" time="0.055" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="com.epam.pharmacy.util.EncoderTest" time="0.107" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_131\jre\bin"/>
@@ -27,7 +27,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 8.1"/>
-    <property name="classworlds.conf" value="D:\Книги по программированию\eclipseWorkSpace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf364431149242806002.tmp"/>
+    <property name="classworlds.conf" value="D:\Книги по программированию\eclipseWorkSpace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf6707831194788678724.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1251"/>
     <property name="java.library.path" value="C:\Program Files\Java\jdk1.8.0_131\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jdk1.8.0_131/bin/../jre/bin/server;C:/Program Files/Java/jdk1.8.0_131/bin/../jre/bin;C:/Program Files/Java/jdk1.8.0_131/bin/../jre/lib/amd64;C:\Program Files\Java\jdk1.8.0_131\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Calibre2\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\GtkSharp\2.12\bin;D:\Книги по программированию\Git\cmd;C:\Program Files (x86)\Skype\Phone\;C:\Program Files\Java\jdk1.8.0_131\bin;C:\Program Files\MySQL\MySQL Utilities 1.6\;D:\Книги по программированию\Yarn\bin;D:\Книги по программированию\node.js\;C:\Program Files\Java\apache-maven-3.5.2\bin;D:\Книги по программированию\Microsoft VS Code\bin;C:\Users\a s u s\AppData\Local\Yarn\bin;C:\Users\a s u s\AppData\Roaming\npm;E:\Downloads\eclipse-java-oxygen-1a-win32-x86_64\eclipse;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -61,5 +61,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.epam.pharmacy.util.EncoderTest" name="shouldReturnEncriptedPasswordInMD5WhenGetInsertedPassword" time="0.055"/>
+  <testcase classname="com.epam.pharmacy.util.EncoderTest" name="shouldReturnEncriptedPasswordInMD5WhenGetInsertedPassword" time="0.107"/>
 </testsuite>

@@ -1,16 +1,12 @@
 package com.epam.pharmacy.exceptions;
 
-public class ConnectionException extends Exception {
+public class ConnectionException extends PharmacyException {
 
     public ConnectionException(String message, Throwable cause) {
         super(message);
     }
 
-    public ConnectionException(Throwable cause) {
-        super();
-    }
-
 	public ConnectionException(String string) {
-		super();
+		super(string);
 	}
 }

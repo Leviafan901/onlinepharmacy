@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Class , provide to show jsp page without any dependieses form action classes.
+ * Class, provide to show jsp page without any dependencies form action classes.
  *
  * @author Sosenkov Alexei
  */
