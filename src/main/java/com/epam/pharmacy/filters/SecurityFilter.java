@@ -43,12 +43,13 @@ public class SecurityFilter implements Filter {
         client = filterConfig.getInitParameter("client");
 
         initGuest();
-        initUser();
+        initClient();
         initAdmin();
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+    		FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
@@ -63,7 +64,7 @@ public class SecurityFilter implements Filter {
             }
         } else if (req.getSession().getAttribute(ATTRIBUTE_ROLE).equals(client)) {
             if (!clientAccess.contains(path)) {
-                LOGGER.warn("Can't get permission(user) for path {}", path);
+                LOGGER.warn("Can't get permission(client) for path {}", path);
                 resp.sendRedirect(MAIN_PAGE);
                 return;
             }
@@ -78,8 +79,6 @@ public class SecurityFilter implements Filter {
             return;
         }
         filterChain.doFilter(req, resp);
-
-
     }
 
     /**
@@ -94,7 +93,7 @@ public class SecurityFilter implements Filter {
     /**
      * Method , access for client
      */
-    private void initUser() {
+    private void initClient() {
        // userAccess.add("/deptCustomerBook");
        // userAccess.add("/takeBook");
         //userAccess.add("/takeBookBasket");
@@ -103,12 +102,13 @@ public class SecurityFilter implements Filter {
        // userAccess.add("/returnCustomerBook");
        // userAccess.add("/basket-delete");
 
-        //userAccess.add("/profileEdit");
-       // userAccess.add("/email-edit");
+    	clientAccess.add("/extend-prescription"); 
+    	clientAccess.add("/prescription-list");
+    	clientAccess.add("/request-list");
     	clientAccess.add("/orders");
     	clientAccess.add("/make-order");
         clientAccess.add("/main");
-        clientAccess.add("/medicines");
+        clientAccess.add("/medicine-list");
         clientAccess.add("/login");
         clientAccess.add("/logout");
         clientAccess.add("/set-language");
@@ -133,7 +133,7 @@ public class SecurityFilter implements Filter {
 
        // adminAccess.add("/profileEdit");
        // adminAccess.add("/email-edit");
-        //adminAccess.add("/password-edit");
+    	adminAccess.add("/delete-medicine");
         adminAccess.add("/medicines");
         adminAccess.add("/main");
        // adminAccess.add("/account");

@@ -1,3 +1,24 @@
+	<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+		id="WebApp_ID" version="3.0">
+
+
+
+    <filter>  
+    	<filter-name>default</filter-name>
+    	<filter-class>com.epam.pharmacy.filters.DefaultFilter</filter-class>  
+    </filter> 
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>/static/*</url-pattern>
+    </servlet-mapping>
+
+
+count_in_store <> 0 AND
+
 //привязка заказа к деталях о заказе
 SELECT pharmacy.`order`.id, prescription_id, date, status, count
 FROM pharmacy.`order`
@@ -11,7 +32,7 @@ SELECT order_medicine.order_id, medicine.name,
 		FROM order_medicine
 		JOIN medicine ON medicine.id = order_medicine.medicine_id
 		GROUP BY order_medicine.order_id;
-//done		
+//done old 		
 SELECT order_id, name, total_amount, prescription_id, date, status, count FROM
 (SELECT om.order_id, m.name,
 		SUM(om.count * m.price) AS total_amount
@@ -27,3 +48,30 @@ WHERE o.user_id = 2
 GROUP BY o.id) AS orders_info
 ON orders_count.order_id = orders_info.id
 ORDER BY date;
+// new ine
+SELECT order_id, name, total_amount, date, status, count FROM
+(SELECT om.order_id, m.name,
+		SUM(om.count * m.price) AS total_amount
+		FROM order_medicine om
+		JOIN medicine m ON om.medicine_id = m.id
+		GROUP BY om.order_id) AS orders_count
+INNER JOIN
+(SELECT o.id, date, status, count
+FROM pharmacy.`order` o
+LEFT JOIN order_medicine m_o
+ON m_o.order_id = o.id
+WHERE o.user_id = 1
+GROUP BY o.id) AS orders_info
+ON orders_count.order_id = orders_info.id
+ORDER BY date;
+
+//for request
+USE pharmacy;
+SELECT r.id AS request_id, r.status, pres_info.prescription_id, creation_date, expiration_date, user_name, user_lastname 
+FROM 
+(SELECT u.id, u.name AS user_name, u.lastname AS user_lastname, p.id AS prescription_id, p.creation_date, p.expiration_date FROM prescription p
+LEFT JOIN pharmacy.`user` u
+ON p.user_id = u.id) AS pres_info
+INNER JOIN request r
+ON r.prescription_id = pres_info.prescription_id
+WHERE pres_info.id = 1

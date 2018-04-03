@@ -35,4 +35,33 @@ public class MedicineService {
 		}
 		return medicineList;
 	}
+	
+	/***
+	 * Method that allow's to delete(mean change status of medicine 'delete' from false to true)
+	 * medicine from DB
+	 * 
+	 * @param medicineId
+	 * @return boolean
+	 * @throws ServiceException
+	 */
+	public boolean deleteMedicine(Long medicineId) throws ServiceException {
+		try (DaoCreator daoCreator = new DaoCreator()) {
+			MedicineDao medicineDao = daoCreator.getMedicineDao();
+			boolean isDeleted = medicineDao.deleteMedicineById(medicineId);
+			return isDeleted;
+		} catch (DaoException | ConnectionException | SQLException e) {
+			throw new ServiceException("Can't delete medicine from DB", e);
+		}
+	}
+	
+	public Medicine getMedicineById(Long medicineId) throws ServiceException {
+		Medicine medicineToUpdate = null;
+		try (DaoCreator daoCreator = new DaoCreator()) {
+			MedicineDao medicineDao = daoCreator.getMedicineDao();
+			medicineToUpdate = medicineDao.getById(medicineId);
+		} catch (DaoException | ConnectionException | SQLException e) {
+			throw new ServiceException("Can't find and return medicine by id !", e) ;
+		}
+		return medicineToUpdate;
+	}
 }

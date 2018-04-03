@@ -1,95 +1,109 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
-<c:url var="logout_url" value="/dir/logout"/>
-<c:url var="medicine_list" value="/dir/medicine-list"/>
-<c:url var="order_list" value="/dir/order-list"/>
-<c:url var="main_page" value="/dir/main" />
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 
-
-<html>
-<head>
-<meta charset="UTF-8">
-	<fmt:bundle basename="i18n">
-		    <fmt:message key="navbar.hello" var="mainPage"/>
-		    <fmt:message key="authentication.logout" var="logout"/>
-		    <fmt:message key="medicines.serach_error" var="search_error_mess"/>
+<fmt:bundle basename="i18n">
+		<fmt:message key="navbar.hello" var="mainPage"/>
+		<fmt:message key="medicines.search_error" var="search_error_mess"/>
+		<fmt:message key="medicines.dosage" var="dosage"/>
+		<fmt:message key="medicines.count" var="medicine_count"/>
+		<fmt:message key="medicines.count_in_store" var="count_in_store"/>
+		<fmt:message key="medicines.price" var="price"/>
+		<fmt:message key="medicines.make_order" var="order"/>
+		<fmt:message key="medicines.form_placeholder" var="form_placeholder"/>
+		<fmt:message key="medicines.need_prescription" var="need_prescription"/>
+		<fmt:message key="medicines.has_prescription" var="has_prescription"/>
+		<fmt:message key="medicines.no_prescription" var="no_prescription"/>
 	</fmt:bundle>
-	<title>${mainPage}</title>
-	<style>
-	    <jsp:directive.include file="/WEB-INF/css/style.css"/>
-	</style>
-	<script>
-        <jsp:directive.include file="/WEB-INF/js/dialog.js"/>
-    </script>
-</head>
 
-<body>
-    <ul id="menu">
-	    <li><a href="${medicine_list}">MEDICINE LIST</a></li>
-	    <li><a href="${order_list}">ORDERS</a></li>
-	    <li><a href="#">REQUESTS</a></li>
-	    <li><a href="${main_page}">ABOUT US</a></li>
-	    <li class="right_block">
-		    <form action="${logout_url}" method="POST">
-				<input type="submit" value="${logout}" class="button_logout" />
-		    </form>
-	    </li>
-	    <li class="right_block"><a href="#">LANGUAGE</a>
-	      <ul class="submenu">
-	      <li><a href="set-language?lang=en">EN</a></li>
-	      <li><a href="set-language?lang=ru">RU</a></li>
-	      </ul>
-	    </li>
-    </ul>
-	
+<my:designPattern role="${sessionScope.role}">
+
 	<c:if test="${not empty search_error}">
-        <p>${search_error_mess}</p>
+	    <p>${search_error_mess}</p>
 	</c:if>
 	
-	<c:forEach items="${medicines}" var="medicine">
-	<c:url var="make-order" value="/dir/make-order" />
-		<div class="drugsForm  by">
-		    <div class="drugsForm__header" style="background-color: #92aeb7">
-		        <div class="drugsForm__description">
-		            <h3 class="drugsForm__description-title">${medicine.name}</h3>
-		        </div>        
-		        <div class="drugsForm__header-buttons">
-		            <i class="drugsForm__header-info" data-ui-drug-hint="hover"></i>
-		        </div>
-		    </div>
-			    <ul class="drugsForm__items">
-			    	<li class="drugsForm__item sku-holder" data-sku-id="60591" data-type="Dosage in mg" >
-			    		<div class="drugsForm__item-left">
-			        		<div class="drugsForm__item-description">
-			        		<span>Dosage in mg - </span>
-			            		<p>${medicine.dosageMg}</p>
-			            	<span>Count in one packet - </span>
-			            	<div class="drugsForm__item-price">${medicine.count}</div>
-			            	<span>Count in store: ${medicine.countInStore}</span>
-			                </div>
-			                <span>Price for one packet - </span>
-			        	<div class="drugsForm__item-price">${medicine.price}</div>
-			   			</div>
-			    		<div class="drugsForm__item-buttons">
-			    		<form action="make-order" method="POST" name="make-order">
-			    		  <input name="medicine_id" type="text"  value="${medicine.id}" hidden="hidden" />
-						  <input name="order_count" type="text" id="return_value" value="" placeholder="Введите количество" required />
-						  <input type="submit" value="ORDER" class="drugsForm__button js-drugsForm__button" />
-			            </form>
-			            </div>
-					</li>
-				</ul>
-			</div>
-	</c:forEach>
-	<div id="footer" style="flex: 0 0 auto">
-        <footer>
-            <div style="margin-top:5px;">
-                <p>Epam Systems Lab21 © 2018, All Rights Reserved
-                    <br>
-                    <span>Web Design By: Alexe  Sosenkov</span></p>
-            </div>
-        </footer>
-     </div>
-</body>
-</html>
+	<c:if test="${sessionScope.role == 'CLIENT'}">
+		<c:forEach items="${medicines}" var="medicine">
+			<div class="drugsForm  by">
+			    <div class="drugsForm__header" style="background-color: #92aeb7">
+			        <div class="drugsForm__description">
+			            <h3 class="drugsForm__description-title">${medicine.name}</h3>
+			        </div>        
+			        <div class="drugsForm__header-buttons">
+			            <i class="drugsForm__header-info" data-ui-drug-hint="hover"></i>
+			        </div>
+			    </div>
+				    <ul class="drugsForm__items">
+				    	<li class="drugsForm__item sku-holder">
+				    		<div class="drugsForm__item-left">
+				        		<div class="drugsForm__item-description">
+				        		  <div><span>${dosage} - ${medicine.dosageMg}</span></div>
+				            	  <div><span>${medicine_count} - ${medicine.count}</span></div>
+				            	  <div><span>${count_in_store}: ${medicine.countInStore}</span></div>
+				            	<div>${need_prescription}: 
+								  <c:if test="${medicine.needPrescription}">
+								    <c:out value="${has_prescription}"/>
+								  </c:if>
+								  <c:if test="${not medicine.needPrescription}">
+								    <c:out value="${no_prescription}"/>
+								  </c:if>
+				            	</div>
+				                </div>
+				                <span>${price} - </span>
+				        	<div class="drugsForm__item-price">${medicine.price}</div>
+				   			</div>
+				    		<div class="drugsForm__item-buttons">
+				    		<form action="make-order" method="POST" name="make-order">
+				    		  <input name="medicine_id" type="text"  value="${medicine.id}" hidden="hidden" />
+							  <input name="order_count" type="text" id="return_value" value="" placeholder="${form_placeholder}" required />
+							  <input type="submit" value="${order}" class="drugsForm__button js-drugsForm__button" />
+				            </form>
+				            </div>
+						</li>
+					</ul>
+				</div>
+		</c:forEach>
+	</c:if>
+	<c:if test="${sessionScope.role == 'ADMIN'}">
+		<c:forEach items="${medicines}" var="medicine">
+			<div class="drugsForm  by">
+			    <div class="drugsForm__header" style="background-color: #92aeb7">
+			        <div class="drugsForm__description">
+			            <h3 class="drugsForm__description-title">${medicine.name}</h3>
+			        </div>        
+			        <div class="drugsForm__header-buttons">
+			            <i class="drugsForm__header-info" data-ui-drug-hint="hover"></i>
+			        </div>
+			    </div>
+				    <ul class="drugsForm__items">
+				    	<li class="drugsForm__item sku-holder">
+				    		<div class="drugsForm__item-left">
+				        		<div class="drugsForm__item-description">
+				        		  <div><span>${dosage} - ${medicine.dosageMg}</span></div>
+				            	  <div><span>${medicine_count} - ${medicine.count}</span></div>
+				            	  <div><span>${count_in_store}: ${medicine.countInStore}</span></div>
+				            	<div>${need_prescription}: 
+								  <c:if test="${medicine.needPrescription}">
+								    <c:out value="${has_prescription}"/>
+								  </c:if>
+								  <c:if test="${not medicine.needPrescription}">
+								    <c:out value="${no_prescription}"/>
+								  </c:if>
+				            	</div>
+				                </div>
+				                <span>${price} - </span>
+				        	<div class="drugsForm__item-price">${medicine.price}</div>
+				   			</div>
+				   			<div class="drugsForm__item-buttons">
+				    		<form action="delete-medicine" method="POST" name="delete-medicine">
+				    		  <input name="medicine_id" type="text"  value="${medicine.id}" hidden="hidden" />
+							  <input type="submit" value="Delete" class="drugsForm__button js-drugsForm__button" />
+				            </form>
+				            </div>
+						</li>
+					</ul>
+				</div>
+		</c:forEach>
+	</c:if>
+</my:designPattern>

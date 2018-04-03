@@ -52,6 +52,14 @@ public class DaoCreator implements AutoCloseable {
         return new OrderMedicineDao(connection);
     }
     
+    public PrescriptionDao getPrescriptionDao() throws DaoException {
+        return new PrescriptionDao(connection);
+    }
+    
+    public RequestDao getRequestDao() throws DaoException {
+        return new RequestDao(connection);
+    }
+    
     /**
      * Puts the connection to the connection pool.
      */

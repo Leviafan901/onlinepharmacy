@@ -14,6 +14,8 @@ public class MakeOrderCommand implements Command {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MakeOrderCommand.class);
 	
+	private static final String ORDER_COUNT = "order_count";
+	private static final String MEDICINE_ID = "medicine_id";
 	private static final String ATTRIBUTE_USER_ID = "userId";
 	private static final String ORDER_INFO_PAGE = "orderinfo";
 	private static final String SUCCESSED_MESSAGE = "successed_message";
@@ -26,8 +28,8 @@ public class MakeOrderCommand implements Command {
 	
 	@Override
 	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-		Long orderedMedicineId = Long.valueOf(request.getParameter("medicine_id"));
-		Long orderedMedicinesCount = Long.valueOf(request.getParameter("order_count"));
+		Long orderedMedicineId = Long.valueOf(request.getParameter(MEDICINE_ID));
+		Long orderedMedicinesCount = Long.valueOf(request.getParameter(ORDER_COUNT));
 		
 		try {
 			HttpSession session = request.getSession();

@@ -20,8 +20,8 @@ public class OrderDao extends AbstractDao<Order> {
 	private static final String CREATE_QUERY = "INSERT INTO pharmacy.`order` (user_id, date, status) VALUES (?, ?, ?)";
 	private static final String SELECT_QUERY_BY_ID = "SELECT user_id, date, status FROM pharmacy.`order` WHERE id = ?";
 	private static final String SELECT_QUERY = "SELECT id, user_id, date, status FROM pharmacy.`order`";
-	private static final String SELECT_CLIENT_ORDERS_DTO_BY_ID = "SELECT order_id, name, total_amount, prescription_id, date, status, count FROM (SELECT om.order_id, m.name, SUM(om.count * m.price) AS total_amount FROM order_medicine om" + 
-																" JOIN medicine m ON om.medicine_id = m.id GROUP BY om.order_id) AS orders_count INNER JOIN (SELECT o.id, prescription_id, date, status, count FROM pharmacy.`order` o LEFT JOIN order_medicine m_o ON m_o.order_id = o.id WHERE o.user_id = ?" + 
+	private static final String SELECT_CLIENT_ORDERS_DTO_BY_ID = "SELECT order_id, name, total_amount, date, status, count FROM (SELECT om.order_id, m.name, SUM(om.count * m.price) AS total_amount FROM order_medicine om" + 
+																" JOIN medicine m ON om.medicine_id = m.id GROUP BY om.order_id) AS orders_count INNER JOIN (SELECT o.id, date, status, count FROM pharmacy.`order` o LEFT JOIN order_medicine m_o ON m_o.order_id = o.id WHERE o.user_id = ?" + 
 																" GROUP BY o.id) AS orders_info ON orders_count.order_id = orders_info.id ORDER BY date";
 	
 	public OrderDao(Connection connection) throws DaoException {
@@ -104,7 +104,7 @@ public class OrderDao extends AbstractDao<Order> {
 	protected void prepareStatementForUpdate(PreparedStatement statement, Order order) throws DaoException {
 		try {
 			prepareOrder(statement, order);
-			statement.setLong(5, order.getId());
+			statement.setLong(4, order.getId());
 		} catch (SQLException e) {
 			throw new DaoException("Can't prepare statement to insert!", e);
 		}

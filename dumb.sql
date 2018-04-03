@@ -11,4 +11,4 @@ INSERT INTO medicine (name, count_in_store, count, dosage_mg, need_prescription,
 INSERT INTO medicine (name, count_in_store, count, dosage_mg, need_prescription, price, deleted) VALUES ('Аспаркам', 5, 7, 50, false, 5.3, false);
 INSERT INTO medicine (name, count_in_store, count, dosage_mg, need_prescription, price, deleted) VALUES ('Фауказол', 3, 7, 150, false, 5.8, false);
 
-INSERT INTO prescription (doctor_id, creation_date, expiration_date, comment) VALUES (2, "2018-03-10", "2018-04-10", 'For Alexei Sosenkov');
+INSERT INTO prescription (doctor_id, user_id, medicine_id, creation_date, expiration_date, comment) VALUES (2, 1, 1, "2018-03-10", "2018-04-10", 'For Alexei Sosenkov');

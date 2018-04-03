@@ -10,10 +10,11 @@ import java.io.IOException;
  *
  * @author Sosenkov Alexei
  */
-@WebFilter(filterName = "EncodingFilter", urlPatterns = "/dir/*", initParams = {@WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding param")})
-
+@WebFilter(filterName = "EncodingFilter", urlPatterns = "/dir/*",
+initParams = {@WebInitParam(name = "encoding", value = "UTF-8", description = "Encoding param")})
 public class EncodingFilter implements Filter {
-    private String code;
+    
+	private String code;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -21,7 +22,8 @@ public class EncodingFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+    		FilterChain filterChain) throws IOException, ServletException {
         String codeRequest = servletRequest.getCharacterEncoding();
         if (code != null && !code.equalsIgnoreCase(codeRequest)) {//
             servletRequest.setCharacterEncoding(code);
@@ -34,5 +36,4 @@ public class EncodingFilter implements Filter {
     public void destroy() {
         code = null;
     }
-
 }

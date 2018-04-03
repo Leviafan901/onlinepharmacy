@@ -9,6 +9,8 @@ public class Prescription implements Identifiable {
 
 	private Long id;
 	private Long doctorId;
+	private Long userId;
+	private Long medicineId;
 	private LocalDate creationDate;
 	private LocalDate expirationDate;
 	private String comment;
@@ -29,6 +31,22 @@ public class Prescription implements Identifiable {
 		this.doctorId = doctorId;
 	}
 	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Long getMedicineId() {
+		return medicineId;
+	}
+
+	public void setMedicineId(Long medicineId) {
+		this.medicineId = medicineId;
+	}
+
 	public LocalDate getCreationDate() {
 		return creationDate;
 	}

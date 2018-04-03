@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * Class filter, intended to set the current local settings of
+ * Class filter, intended to set the current locale settings of
  * the user whose data is stored in the cookies
  *
  * @author Sosenkov Alexei
@@ -21,7 +21,9 @@ public class LocaleFilter implements Filter {
 	private static final String LANG = "lang";
 
 	@Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
+    public void init(FilterConfig filterConfig) throws ServletException {
+		
+	}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.epam.pharmacy.services.MedicineService;
 import com.epam.pharmacy.services.OrderService;
+import com.epam.pharmacy.services.PrescriptionService;
+import com.epam.pharmacy.services.RequestService;
 import com.epam.pharmacy.services.UserService;
 
 public class CommandFactory {
@@ -16,26 +18,33 @@ public class CommandFactory {
 
         //GET request
         
-        //common user-admin action
+        //common client-doctor-admin commands
         commands.put("GET/welcome", new ShowPageCommand("welcome"));
         commands.put("GET/set-language", new SelectLanguageCommand());
         commands.put("GET/main", new ShowPageCommand("main"));
         commands.put("GET/medicine-list", new ShowMedicineListCommand(new MedicineService()));
-
-        //user action
+        commands.put("GET/prescription-list", new ShowPrescriptionListCommand(new PrescriptionService()));
+        commands.put("GET/request-list", new ShowUserRequestDtoListCommand(new RequestService()));
+        
+        //client command
         commands.put("GET/order-list", new ShowClientOrderDtoListCommand(new OrderService()));
         
-        //admin action
+        //doctor
+        
+        //admin command
 
         //POST request
 
-        //common user-admin action
+        //common client-admin commands
         commands.put("POST/login", new LoginCommand(new UserService()));
         commands.put("POST/logout", new LogoutCommand());
-        //user action
+        
+        //client command
         commands.put("POST/make-order", new MakeOrderCommand(new OrderService()));
+        commands.put("POST/extend-prescription", new ExtendPrescriptionCommand(new RequestService()));
 
-        //admin action
+        //admin command
+        commands.put("POST/delete-medicine", new DeleteMedicineCommand(new MedicineService()));
     }
     public Command getCommand(String command) {
         if (commands == null) {
