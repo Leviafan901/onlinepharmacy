@@ -22,6 +22,4 @@ public class CommandResult {
 	public boolean isRedirect() {
 		return redirect;
 	}
-    
-    
 }

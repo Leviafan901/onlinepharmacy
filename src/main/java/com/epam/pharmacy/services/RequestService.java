@@ -2,6 +2,7 @@ package com.epam.pharmacy.services;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import com.epam.pharmacy.dao.DaoCreator;
 import com.epam.pharmacy.dao.RequestDao;
 import com.epam.pharmacy.domain.Request;
 import com.epam.pharmacy.domain.enumeration.RequestStatus;
+import com.epam.pharmacy.domain.enumeration.Role;
 import com.epam.pharmacy.dto.RequestDto;
 import com.epam.pharmacy.exceptions.ConnectionException;
 import com.epam.pharmacy.exceptions.DaoException;
@@ -63,22 +65,52 @@ public class RequestService {
 	}
 	
 	/**
-	 * Method that return requestDtoList by user Id
+	 * Method that return requestDtoList by user Id and his role
 	 * (DTO - information about request, prescription and user name, lastname)
 	 * 
-	 * @param userId
+	 * @param Long userId, String role
 	 * @return RequestDtoList by user ID
 	 * @throws ServiceException
 	 */
-	public List<RequestDto> getUserRequests(Long userId) throws ServiceException {
+	public List<RequestDto> getUserRequests(Long userId, Role role) throws ServiceException {
 		List<RequestDto> requestList = new ArrayList<>();
 		try (DaoCreator daoCreator = new DaoCreator()) {
 			RequestDao requestDao = daoCreator.getRequestDao();
-			requestList = requestDao.getAllUserRequestsById(userId);
+			if (role.equals(Role.CLIENT)) {
+			    requestList = requestDao.getAllClientRequestDtoById(userId);
+			}
+			if (role.equals(Role.DOCTOR)) {
+				requestList = requestDao.getAllDoctorRequestDtoById(userId);
+			}
+			Collections.reverse(requestList);
 			LOGGER.info("Find and return all client = {} orders from DB", userId);
 		} catch(DaoException|ConnectionException|SQLException e) {
 		    throw new ServiceException("Can't return all client orders from DB", e);
 		}
 		return requestList;
+	}
+	
+	/***
+	 * Method allows to change Request status in the table to 'rejected'
+	 * 
+	 * @param requestId
+	 * @return rejectRequest
+	 * @throws ServiceException
+	 */
+	public boolean rejectRequest(Long requestId) throws ServiceException {
+		try (DaoCreator daoCreator = new DaoCreator()) {
+			try {
+				RequestDao requestDao = daoCreator.getRequestDao();
+				daoCreator.startTransaction();
+				boolean isRejected = requestDao.rejectRequestById(requestId);
+				daoCreator.commitTransaction();
+				return isRejected;
+			} catch (DaoException e) {
+				daoCreator.rollbackTransaction();
+				throw new ServiceException("Can't end transaction and cancel order!", e);
+			}
+		} catch (ConnectionException | SQLException e) {
+			throw new ServiceException("Can't cancel order!", e);
+		}
 	}
 }

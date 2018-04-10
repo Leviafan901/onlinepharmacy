@@ -26,12 +26,17 @@ public class CommandFactory {
         commands.put("GET/prescription-list", new ShowPrescriptionListCommand(new PrescriptionService()));
         commands.put("GET/request-list", new ShowUserRequestDtoListCommand(new RequestService()));
         
-        //client command
+        //client commands
         commands.put("GET/order-list", new ShowClientOrderDtoListCommand(new OrderService()));
         
-        //doctor
+        //doctor commands
+        commands.put("GET/prescription-form",
+        		new ShowPrescriptionCreationFormCommand(new MedicineService(), new UserService()));
         
-        //admin command
+        //admin commands
+        commands.put("GET/admin-order-list", new ShowAdminOrderDtoListCommand(new OrderService()));
+        commands.put("GET/change-form", new ShowMedicineChangeFormCommand(new MedicineService()));
+        commands.put("GET/creation-form", new ShowMedicineCreationFormCommand());
 
         //POST request
 
@@ -39,12 +44,21 @@ public class CommandFactory {
         commands.put("POST/login", new LoginCommand(new UserService()));
         commands.put("POST/logout", new LogoutCommand());
         
-        //client command
+        //client commands
         commands.put("POST/make-order", new MakeOrderCommand(new OrderService()));
-        commands.put("POST/extend-prescription", new ExtendPrescriptionCommand(new RequestService()));
+        commands.put("POST/request-extention-prescription", new MakeRequestExtentionPrescriptionCommand(new RequestService()));
 
-        //admin command
+        //admin commands
         commands.put("POST/delete-medicine", new DeleteMedicineCommand(new MedicineService()));
+        commands.put("POST/change-medicine", new ChangeMedicineCommand(new MedicineService()));
+        commands.put("POST/create-medicine", new CreateMedicineCommand(new MedicineService()));
+        commands.put("POST/pay-order", new PayOrderCommand(new OrderService()));
+        commands.put("POST/cancel-order", new CancelOrderCommand(new OrderService()));
+        
+        //doctor commads
+        commands.put("POST/create-prescription", new CreatePrescriptionCommand(new PrescriptionService()));
+        commands.put("POST/reject-request", new RejectExtentionRequestCommand(new RequestService()));
+        commands.put("POST/extend-prescription", new ExtendPrescriptionCommand(new PrescriptionService()));
     }
     public Command getCommand(String command) {
         if (commands == null) {

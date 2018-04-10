@@ -9,8 +9,8 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epam.pharmacy.domain.Prescription;
 import com.epam.pharmacy.domain.enumeration.Role;
+import com.epam.pharmacy.dto.PrescriptionDto;
 import com.epam.pharmacy.exceptions.ServiceException;
 import com.epam.pharmacy.services.PrescriptionService;
 
@@ -29,17 +29,14 @@ public class ShowPrescriptionListCommand implements Command {
 		this.prescriptionService = prescriptionService;
 	}
 	
-	/**
-	 * 
-	 */
 	@Override
 	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			HttpSession session = request.getSession();
 			Long clientId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
 			Role role = (Role) session.getAttribute(ATTRIBUTE_USER_ROLE); 
-			List<Prescription> prescriptionList = prescriptionService.getPrescriptionList(clientId, role);
-			if (prescriptionList != null) {
+			List<PrescriptionDto> prescriptionList = prescriptionService.getPrescriptionList(clientId, role);
+			if (!prescriptionList.isEmpty()) {
 		    	request.setAttribute(ATTRIBUTE_PRESCRIPTIONS, prescriptionList);
 		    	LOGGER.info("Prescription list transfer to the page.");
 		    } else {

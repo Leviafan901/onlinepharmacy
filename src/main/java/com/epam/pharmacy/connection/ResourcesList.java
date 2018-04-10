@@ -55,7 +55,7 @@ public class ResourcesList<T> {
     }
 
     /**
-     * A method that allows you to take a connection from the list if it is available
+     * Method that allows you to take a connection from the list if it is available
      *
      * @return initialized connection
      */

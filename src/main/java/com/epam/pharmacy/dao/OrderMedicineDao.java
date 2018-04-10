@@ -6,9 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.epam.pharmacy.domain.OrderMedicine;
+import com.epam.pharmacy.dto.OrderMedicineDto;
 import com.epam.pharmacy.exceptions.DaoException;
 
-public class OrderMedicineDao extends AbstractDao<OrderMedicine> {
+public class OrderMedicineDao extends AbstractDao<OrderMedicine, OrderMedicineDto> {
 
 	private static final String UPDATE_QUERY = "UPDATE Order_Medicine SET medicine_id=? order_id=? count=? WHERE id = ?";
 	private static final String CREATE_QUERY = "INSERT INTO Order_Medicine (medicine_id, order_id, count) VALUES (?, ?, ?)";
@@ -38,6 +39,11 @@ public class OrderMedicineDao extends AbstractDao<OrderMedicine> {
 	public String getUpdateQuery() {
 		return UPDATE_QUERY;
 	}
+	
+	@Override
+	protected OrderMedicineDto buildDto(ResultSet resultSet) throws SQLException {
+		return null;
+	}
 
 	@Override
 	protected OrderMedicine build(ResultSet resultSet) throws SQLException {
@@ -53,21 +59,23 @@ public class OrderMedicineDao extends AbstractDao<OrderMedicine> {
 	protected void prepareStatementForInsert(PreparedStatement statement, OrderMedicine orderMedicine)
 			throws DaoException {
 		try {
-			statement.setLong(1, orderMedicine.getMedicineId());
-			statement.setLong(2, orderMedicine.getOrderId());
-			statement.setLong(3, orderMedicine.getCount());
+			prepareOrderMedicine(statement, orderMedicine);
 		} catch (SQLException e) {
 			throw new DaoException("Can't prepare statement to insert!", e);
 		}
+	}
+
+	private void prepareOrderMedicine(PreparedStatement statement, OrderMedicine orderMedicine) throws SQLException {
+		statement.setLong(1, orderMedicine.getMedicineId());
+		statement.setLong(2, orderMedicine.getOrderId());
+		statement.setLong(3, orderMedicine.getCount());
 	}
 
 	@Override
 	protected void prepareStatementForUpdate(PreparedStatement statement, OrderMedicine orderMedicine)
 			throws DaoException {
 		try {
-			statement.setLong(1, orderMedicine.getMedicineId());
-			statement.setLong(2, orderMedicine.getOrderId());
-			statement.setLong(3, orderMedicine.getCount());
+			prepareOrderMedicine(statement, orderMedicine);
 			statement.setLong(4, orderMedicine.getId());
 		} catch (SQLException e) {
 			throw new DaoException("Can't prepare statement to insert!", e);

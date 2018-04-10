@@ -19,7 +19,8 @@ import java.util.*;
  */
 @WebFilter(filterName = "SecurityFilter", urlPatterns = "/dir/*",
 initParams = {@WebInitParam(name = "admin", value = "admin", description = "role"),
-		@WebInitParam(name = "client", value = "client", description = "role")})
+		@WebInitParam(name = "client", value = "client", description = "role"),
+		@WebInitParam(name = "doctor", value = "doctor", description = "role")})
 public class SecurityFilter implements Filter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityFilter.class);
 
@@ -29,10 +30,12 @@ public class SecurityFilter implements Filter {
 
     private String admin;
     private String client;
+    private String doctor;
 
     private final Set<String> guestAccess = new HashSet<>();
     private final Set<String> clientAccess = new HashSet<>();
     private final Set<String> adminAccess = new HashSet<>();
+    private final Set<String> doctorAccess = new HashSet<>();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -41,10 +44,12 @@ public class SecurityFilter implements Filter {
 
         admin = filterConfig.getInitParameter("admin");
         client = filterConfig.getInitParameter("client");
+        doctor = filterConfig.getInitParameter("doctor");
 
         initGuest();
         initClient();
         initAdmin();
+        initDoctor();
     }
 
     @Override
@@ -74,6 +79,12 @@ public class SecurityFilter implements Filter {
                 resp.sendRedirect(MAIN_PAGE);
                 return;
             }
+        } else if (req.getSession().getAttribute(ATTRIBUTE_ROLE).equals(doctor)) {
+            if (!doctorAccess.contains(path)) {
+                LOGGER.warn("Can't get permission(admin) for path {}", path);
+                resp.sendRedirect(MAIN_PAGE);
+                return;
+            }
         } else {
             filterChain.doFilter(req, resp);
             return;
@@ -82,7 +93,7 @@ public class SecurityFilter implements Filter {
     }
 
     /**
-     * Method , access for guest
+     * Methods available for doctor guest
      */
     private void initGuest() {
         guestAccess.add("/welcome");
@@ -91,21 +102,13 @@ public class SecurityFilter implements Filter {
     }
 
     /**
-     * Method , access for client
+     * Methods available for doctor client
      */
     private void initClient() {
-       // userAccess.add("/deptCustomerBook");
-       // userAccess.add("/takeBook");
-        //userAccess.add("/takeBookBasket");
-        //userAccess.add("/returnBook");
-        //userAccess.add("/basket");
-       // userAccess.add("/returnCustomerBook");
-       // userAccess.add("/basket-delete");
-
-    	clientAccess.add("/extend-prescription"); 
+    	clientAccess.add("/request-extention-prescription"); 
     	clientAccess.add("/prescription-list");
     	clientAccess.add("/request-list");
-    	clientAccess.add("/orders");
+    	clientAccess.add("/order-list");
     	clientAccess.add("/make-order");
         clientAccess.add("/main");
         clientAccess.add("/medicine-list");
@@ -115,38 +118,47 @@ public class SecurityFilter implements Filter {
     }
 
     /**
-     * Method , access for guest admin
+     * Methods available for doctor admin
      */
     private void initAdmin() {
-       // adminAccess.add("/readers");
-       // adminAccess.add("/management");
-       // adminAccess.add("/returnCustomerBook");
-       // adminAccess.add("/registerBook");
-       // adminAccess.add("/personalDataEdit");
-        //adminAccess.add("/bookEdit");
-        //adminAccess.add("/aboutReader");
-        //adminAccess.add("/adminReturnBook");
-       // adminAccess.add("/deleteBook");
-        //adminAccess.add("/deleteProfile");
-        //adminAccess.add("/deleteBookError");
-       // adminAccess.add("/deleteProfileError");
-
-       // adminAccess.add("/profileEdit");
-       // adminAccess.add("/email-edit");
+    	adminAccess.add("/admin-order-list");
+    	adminAccess.add("/creation-form");
+    	adminAccess.add("/change-form");
+    	adminAccess.add("/create-medicine");
+    	adminAccess.add("/change-medicine");
     	adminAccess.add("/delete-medicine");
-        adminAccess.add("/medicines");
+    	adminAccess.add("/pay-order");
+    	adminAccess.add("/cancel-order");
+        adminAccess.add("/medicine-list");
         adminAccess.add("/main");
-       // adminAccess.add("/account");
         adminAccess.add("/login");
         adminAccess.add("/logout");
         adminAccess.add("/set-language");
     }
 
+    /**
+     * Methods available for doctor role
+     */
+    private void initDoctor() {
+    	doctorAccess.add("/extend-prescription");
+    	doctorAccess.add("/reject-request");
+    	doctorAccess.add("/request-list");
+    	doctorAccess.add("/create-prescription");
+    	doctorAccess.add("/prescription-form");
+    	doctorAccess.add("/prescription-list");
+    	doctorAccess.add("/main");
+    	doctorAccess.add("/login");
+    	doctorAccess.add("/logout");
+    	doctorAccess.add("/set-language");
+    }
+    
     @Override
     public void destroy() {
         admin = null;
         client = null;
+        doctor = null;
         adminAccess.removeAll(adminAccess);
+        doctorAccess.removeAll(doctorAccess);
         clientAccess.removeAll(clientAccess);
         guestAccess.removeAll(guestAccess);
     }

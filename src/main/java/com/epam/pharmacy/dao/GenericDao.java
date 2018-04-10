@@ -16,10 +16,10 @@ public interface GenericDao<T extends Identifiable> {
     public T insert(T object) throws DaoException;
 
     /** Return object with row where key or null */
-    public T getById(Long key) throws DaoException;
+    public Optional<T> getById(Long key) throws DaoException;
 
     /** Save persistence of object in DB */
-    public void update(T object) throws DaoException;
+    public boolean update(T object) throws DaoException;
 
     /** Get list of objects which are rows in DB */
     public List<T> getAll() throws DaoException;

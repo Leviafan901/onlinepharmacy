@@ -8,6 +8,8 @@ import com.epam.pharmacy.exceptions.ServiceException;
 import com.epam.pharmacy.services.UserService;
 import com.epam.pharmacy.util.DigestUtils;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -37,25 +39,25 @@ public class LoginCommand implements Command {
     }
 
 	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        String login = request.getParameter(LOGIN);
-        String password = request.getParameter(PASSWORD);
-        
-        try {
-            User user = userService.findUserByLoginAndPassword(login, DigestUtils.encode(password));
-            if (user != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute(ATTRIBUTE_USER_ID, user.getId());
-                session.setAttribute(ATTRIBUTE_ROLE, user.getRole());
-                session.setAttribute(ATTRIBUTE_NAME, user.getName());//
-                LOGGER.info("User by id = {} and role = {} login in system ", user.getId(), user.getRole());
-                return new CommandResult(MAIN_PAGE, true);
-            } else {
-                request.setAttribute(LOGIN_ERROR, true);
-                return new CommandResult(WELCOME);
-            }
-        } catch (ServiceException e) {
-            LOGGER.warn("Can't find user by login and password", e);
-        }
-        return null;
-    }
+		try {
+			String login = request.getParameter(LOGIN);
+			String password = request.getParameter(PASSWORD);
+			Optional<User> user = userService.findUserByLoginAndPassword(login, DigestUtils.encode(password));
+			if (user.isPresent()) {
+				HttpSession session = request.getSession();
+				User gettedUser = user.get();
+				session.setAttribute(ATTRIBUTE_USER_ID, gettedUser.getId());
+				session.setAttribute(ATTRIBUTE_ROLE, gettedUser.getRole());
+				session.setAttribute(ATTRIBUTE_NAME, gettedUser.getName());
+				LOGGER.info("User by id = {} and role = {} login in system ", gettedUser.getId(), gettedUser.getRole());
+				return new CommandResult(MAIN_PAGE, true);
+			} else {
+				request.setAttribute(LOGIN_ERROR, true);
+				return new CommandResult(WELCOME);
+			}
+		} catch (ServiceException e) {
+			LOGGER.warn("Can't find user by login and password", e);
+		}
+		return null;
+	}
 }

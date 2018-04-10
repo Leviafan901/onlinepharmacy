@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epam.pharmacy.dto.OrderDto;
+import com.epam.pharmacy.dto.ClientOrderDto;
 import com.epam.pharmacy.exceptions.ServiceException;
 import com.epam.pharmacy.services.OrderService;
 
@@ -32,8 +32,8 @@ public class ShowClientOrderDtoListCommand implements Command {
 		try {
 			HttpSession session = request.getSession();
 			Long clientId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
-			List<OrderDto> orderList = orderService.getClientOrders(clientId);
-			if (orderList != null) {
+			List<ClientOrderDto> orderList = orderService.getClientOrders(clientId);
+			if (!orderList.isEmpty()) {
 				request.setAttribute(ATTRIBUTE_ORDER_LIST, orderList);
 				LOGGER.info("Order list transfer to the page.");
 			} else {
@@ -44,5 +44,4 @@ public class ShowClientOrderDtoListCommand implements Command {
         }
 		return new CommandResult(ORDERS_PAGE);
 	}
-
 }

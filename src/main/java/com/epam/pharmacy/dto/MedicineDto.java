@@ -1,14 +1,23 @@
 package com.epam.pharmacy.dto;
 
-public class MedicineDto {
+public class MedicineDto implements Dto {
 
-	private boolean needPrescription;
-
-	public boolean isNeedPrescription() {
-		return needPrescription;
+	private Long medicineId;
+	private String medicineName;
+	
+	public Long getMedicineId() {
+		return medicineId;
 	}
-
-	public void setNeedPrescription(boolean needPrescription) {
-		this.needPrescription = needPrescription;
+	
+	public void setMedicineId(Long medicineId) {
+		this.medicineId = medicineId;
+	}
+	
+	public String getMedicineName() {
+		return medicineName;
+	}
+	
+	public void setMedicineName(String medicineName) {
+		this.medicineName = medicineName;
 	}
 }

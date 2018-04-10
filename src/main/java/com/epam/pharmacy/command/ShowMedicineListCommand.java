@@ -28,7 +28,7 @@ public class ShowMedicineListCommand implements Command {
 	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {	
 		try {
 		    List<Medicine> medicineList = medicineService.getMedicineList();
-		    if (medicineList != null) {
+		    if (!medicineList.isEmpty()) {
 		    	request.setAttribute(ATTRIBUTE_MEDICINES, medicineList);
 		    	LOGGER.info("Medicine list transfer to the page.");
 		    } else {

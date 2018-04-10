@@ -7,8 +7,10 @@
 <c:url var="logout_url" value="/dir/logout" />
 <c:url var="medicine_list" value="/dir/medicine-list" />
 <c:url var="order_list" value="/dir/order-list" />
+<c:url var="admin_order_list" value="/dir/admin-order-list" />
 <c:url var="main_page" value="/dir/main" />
 <c:url var="prescription_list" value="/dir/prescription-list"/>
+<c:url var="prescription_form" value="/dir/prescription-form"/>
 <c:url var="request_list" value="/dir/request-list"/>
 <c:url var="background" value="/static/images/pills.jpg"/>
 <c:url var="header_img" value="/static/images/header4-1.jpg"/>
@@ -25,15 +27,18 @@
 	    <fmt:message key="login.error" var="login_error_aut"/>
         <fmt:message key="navbar.hello" var="mainPage"/>
 	    <fmt:message key="menu.medicine_list" var="medicines"/>
-	    <fmt:message key="menu.order_list" var="orders"/>
+	    <fmt:message key="menu.client_order_list" var="clientOrders"/>
+	    <fmt:message key="menu.admin_order_list" var="adminAllOrders"/>
 	    <fmt:message key="menu.prescription_list" var="prescriptions"/>
+	    <fmt:message key="menu.doctor_prescription_list" var="doctorPrescriptions"/>
+	    <fmt:message key="menu.create_prescription" var="createPrescription"/>
 	    <fmt:message key="menu.request_list" var="requests"/>
 	    <fmt:message key="menu.language" var="language"/>
 	    <fmt:message key="menu.contacts" var="about_us"/>
     </fmt:bundle>
 
     <style>
-        <jsp:directive.include file="/WEB-INF/css/style.css"/>
+        <jsp:directive.include file="/WEB-INF/css/style.css"/><!-- -->
         body {
 	        background-image: url("${background}");
         }
@@ -50,13 +55,15 @@
 
 <body>
   <div id="header">
-      <header class="header-inner-page-header">ONLINE PHARMACY</header>
+      <header class="header-inner-page-header">
+        <span class="inner">ONLINE PHARMACY</span>
+      </header>
   </div>
 
     <c:if test="${role.equals('CLIENT')}">
         <ul id="menu">
 		    <li><a href="${medicine_list}">${medicines}</a></li>
-		    <li><a href="${order_list}">${orders}</a></li>
+		    <li><a href="${order_list}">${clientOrders}</a></li>
 		    <li><a href="${prescription_list}">${prescriptions}</a></li>
 		    <li><a href="${request_list}">${requests}</a></li>
 		    <li><a href="${main_page}">${about_us}</a></li>
@@ -77,7 +84,28 @@
         <nav>
         <ul id="menu">
             <li><a href="${medicine_list}">${medicines}</a></li>
-		    <li><a href="${order_list}">${orders}</a></li>
+		    <li><a href="${admin_order_list}">${adminAllOrders}</a></li>
+		    <li><a href="${main_page}">${about_us}</a></li>
+		    <li style="float: right;"><a href="#">${language}</a>
+		      <ul class="submenu">
+		      <li><a href="set-language?lang=en">EN</a></li>
+		      <li><a href="set-language?lang=ru">RU</a></li>
+		      </ul>
+		    </li>
+		    <li class="right_block">
+			    <form action="${logout_url}" method="POST">
+					<input type="submit" value="${logout}" class="button_logout" />
+			    </form>
+		    </li>
+        </ul>
+        </nav>
+    </c:if>
+    <c:if test="${role.equals('DOCTOR')}">
+        <nav>
+        <ul id="menu">
+            <li><a href="${prescription_form}">${createPrescription}</a></li>
+            <li><a href="${prescription_list}">${doctorPrescriptions}</a></li>
+            <li><a href="${request_list}">${requests}</a></li>
 		    <li><a href="${main_page}">${about_us}</a></li>
 		    <li style="float: right;"><a href="#">${language}</a>
 		      <ul class="submenu">

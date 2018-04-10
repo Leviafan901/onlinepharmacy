@@ -1,5 +1,6 @@
 USE pharmacy;
-INSERT INTO user (name, lastname, login, password, role) VALUES ('Alexei', 'Sosenkov', 'Leviafan', MD5(223223), 'client');
+INSERT INTO user (name, lastname, login, password, role) VALUES ('Alexei', 'Sosenkov', 'client', MD5('client'), 'client');
+INSERT INTO user (name, lastname, login, password, role) VALUES ('Alexei', 'Sosenkov', 'admin', MD5('admin'), 'admin');
 INSERT INTO user (name, lastname, login, password, role) VALUES ('Alexei', 'Sosenkov', 'doctor', MD5('doctor'), 'doctor');
 
 INSERT INTO medicine (name, count_in_store, count, dosage_mg, need_prescription, price, deleted) VALUES ('Ацицеф', 5, 4, 300, true, 10, false);

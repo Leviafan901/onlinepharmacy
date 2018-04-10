@@ -28,12 +28,11 @@ public class MakeOrderCommand implements Command {
 	
 	@Override
 	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-		Long orderedMedicineId = Long.valueOf(request.getParameter(MEDICINE_ID));
-		Long orderedMedicinesCount = Long.valueOf(request.getParameter(ORDER_COUNT));
-		
 		try {
 			HttpSession session = request.getSession();
 			Long userId = (Long) session.getAttribute(ATTRIBUTE_USER_ID);
+			Long orderedMedicineId = Long.valueOf(request.getParameter(MEDICINE_ID));
+			Long orderedMedicinesCount = Long.valueOf(request.getParameter(ORDER_COUNT));
 			boolean isMade = orderService.makeOrder(userId, orderedMedicineId, orderedMedicinesCount);
 			if (isMade) {
 				request.setAttribute(SUCCESSED_MESSAGE, true);
@@ -47,5 +46,4 @@ public class MakeOrderCommand implements Command {
 		}
 		return null;
 	}
-
 }

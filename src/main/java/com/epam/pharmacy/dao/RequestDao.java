@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.epam.pharmacy.domain.Request;
@@ -14,13 +13,17 @@ import com.epam.pharmacy.domain.enumeration.RequestStatus;
 import com.epam.pharmacy.dto.RequestDto;
 import com.epam.pharmacy.exceptions.DaoException;
 
-public class RequestDao extends AbstractDao<Request> {
+public class RequestDao extends AbstractDao<Request, RequestDto> {
 
 	private static final String UPDATE_QUERY = "UPDATE Request SET doctor_id=? prescription_id=? status=? WHERE id = ?";
+	private static final String UPDATE_QUERY_REJECT_REQUEST = "UPDATE Request SET status='rejected' WHERE id = ?";
+	private static final String UPDATE_QUERY_APPROVED_REQUEST = "UPDATE Request SET status='approved' WHERE id = ?";
 	private static final String CREATE_QUERY = "INSERT INTO Request (doctor_id, prescription_id, status) VALUES (?, ?, ?)";
 	private static final String SELECT_QUERY_BY_ID = "SELECT doctor_id, prescription_id, status FROM Request WHERE id = ?";
-	private static final String SELECT_QUERY_REQUEST_DTO_BY_USER_ID = "SELECT r.id AS request_id, r.status, pres_info.prescription_id, creation_date, expiration_date, user_name, user_lastname FROM (SELECT u.id, u.name AS user_name, u.lastname AS user_lastname, p.id AS prescription_id, p.creation_date, p.expiration_date FROM prescription p" + 
-			                                                           " LEFT JOIN pharmacy.`user` u ON p.user_id = u.id) AS pres_info INNER JOIN request r ON r.prescription_id = pres_info.prescription_id WHERE pres_info.id = ?";
+	private static final String SELECT_QUERY_REQUEST_DTO_BY_CLIENT_ID = "SELECT r.id AS request_id, r.doctor_id, r.status, pres_info.prescription_id, creation_date, expiration_date, user_name, user_lastname FROM (SELECT u.id, p.user_id, u.name AS user_name, u.lastname AS user_lastname, p.id AS prescription_id, p.creation_date, p.expiration_date FROM prescription p" + 
+			                                                           " LEFT JOIN pharmacy.`user` u ON u.id = p.doctor_id) AS pres_info INNER JOIN request r ON r.prescription_id = pres_info.prescription_id WHERE pres_info.user_id = ? ORDER BY r.id";
+	private static final String SELECT_QUERY_REQUEST_DTO_BY_DOCTOR_ID = "SELECT r.id AS request_id, r.doctor_id, r.status, pres_info.prescription_id, creation_date, expiration_date, user_name, user_lastname FROM (SELECT u.id, u.name AS user_name, u.lastname AS user_lastname, p.id AS prescription_id, p.creation_date, p.expiration_date FROM prescription p" + 
+                                                                        " LEFT JOIN pharmacy.`user` u ON p.user_id = u.id) AS pres_info INNER JOIN request r ON r.prescription_id = pres_info.prescription_id WHERE r.doctor_id = ? ORDER BY r.id";
 	private static final String SELECT_QUERY = "SELECT id, doctor_id, prescription_id, status FROM Request";
 	
 	public RequestDao(Connection connection) throws DaoException {
@@ -47,22 +50,30 @@ public class RequestDao extends AbstractDao<Request> {
 		return UPDATE_QUERY;
 	}
 	
-	public List<RequestDto> getAllUserRequestsById(Long userId) throws DaoException {
-		List<RequestDto> requestDtoList = new ArrayList<>();
-		try (PreparedStatement statement = createStatement(SELECT_QUERY_REQUEST_DTO_BY_USER_ID, userId)) {
-			try (ResultSet resultSet = statement.executeQuery()) {
-				while (resultSet.next()) {
-					requestDtoList.add(buildOrderDto(resultSet));
-				}
-			}
-		} catch (SQLException e) {
-			throw new DaoException("Can't execute query!", e);
-		}
+	public List<RequestDto> getAllClientRequestDtoById(Long userId) throws DaoException {
+		List<RequestDto> requestDtoList = executeQueryDto(SELECT_QUERY_REQUEST_DTO_BY_CLIENT_ID, userId);
 		return requestDtoList;
 	}
+	
+	public List<RequestDto> getAllDoctorRequestDtoById(Long userId) throws DaoException {
+		List<RequestDto> requestDtoList = executeQueryDto(SELECT_QUERY_REQUEST_DTO_BY_DOCTOR_ID, userId);
+		return requestDtoList;
+	}
+	
+	public boolean rejectRequestById(Long requestId) throws DaoException {
+		boolean isRejected = executeUpdateQuery(UPDATE_QUERY_REJECT_REQUEST, requestId);
+		return isRejected;
+	}
+	
+	public boolean approveRequestById(Long requestId) throws DaoException {
+		boolean isApproved = executeUpdateQuery(UPDATE_QUERY_APPROVED_REQUEST, requestId);
+		return isApproved;
+	}
 
-	private RequestDto buildOrderDto(ResultSet resultSet) throws SQLException {
+	@Override
+	protected RequestDto buildDto(ResultSet resultSet) throws SQLException {
 		RequestDto requestDto = new RequestDto();
+		requestDto.setDoctorId(resultSet.getLong("doctor_id"));
 		requestDto.setRequestId(resultSet.getLong("request_id"));
 		requestDto.setPrescriptionId(resultSet.getLong("prescription_id"));
 		String status = resultSet.getString("status")

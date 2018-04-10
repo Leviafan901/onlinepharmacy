@@ -29,11 +29,11 @@ public class DigestUtils {
             byte[] array = messageDigest.digest(text.getBytes());
             StringBuffer stringBuffer = new StringBuffer();
             for (byte anArray : array) {
-                stringBuffer.append(Integer.toHexString((anArray & 0xFF) | 0x100).substring(1, 3));//
+                stringBuffer.append(Integer.toHexString((anArray & 0xFF) | 0x100).substring(1, 3));
             }
             return stringBuffer.toString();
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.warn("Don't work encoding tool", e);
+            LOGGER.warn("Does't work encoding tool", e);
         }
         return null;
     }

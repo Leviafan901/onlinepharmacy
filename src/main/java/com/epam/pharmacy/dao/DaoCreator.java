@@ -69,36 +69,39 @@ public class DaoCreator implements AutoCloseable {
     
     /**
      * The method allows you to start a transaction.
+     * @throws ConnectionException 
      */
-    public void startTransaction() {
+    public void startTransaction() throws ConnectionException {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            LOGGER.error("Can't starting date transaction", e);//
+        	throw new ConnectionException("Can't starting date transaction", e);
         }
     }
 
     /**
      * The method allows you to perform a transaction.
+     * @throws ConnectionException 
      **/
-    public void commitTransaction() {
+    public void commitTransaction() throws ConnectionException {
         try {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            LOGGER.error("Can't committing date transaction", e);//
+            throw new ConnectionException("Can't committing date transaction", e);
         }
     }
 
     /**
      * The method to cancel the transaction.
+     * @throws ConnectionException 
      */
-    public void rollbackTransaction() {
+    public void rollbackTransaction() throws ConnectionException {
         try {
             LOGGER.debug("Call rollback transaction");
             connection.rollback();
         } catch (SQLException e) {
-            LOGGER.error("Can't rollback data transaction", e);//
+        	throw new ConnectionException("Can't rollback data transaction", e);
         }
     }
     

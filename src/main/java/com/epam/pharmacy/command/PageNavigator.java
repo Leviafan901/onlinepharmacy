@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class PageNavigator {
 
-	private static final Logger log = LoggerFactory.getLogger(PageNavigator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PageNavigator.class);
 
 	private static final String PATH_TO_JSP = "/WEB-INF/jsp/";
 	private static final String JSP_FORMAT = ".jsp";
@@ -33,7 +33,7 @@ public class PageNavigator {
                 request.getRequestDispatcher(path).forward(request, response);
             }
         } catch (ServletException | IOException e) {
-            log.error("Can't work redirect dispatcher", e);
+            LOGGER.error("Can't work redirect dispatcher", e);
         }
     }
 }

@@ -1,7 +1,6 @@
 com\epam\pharmacy\command\ShowUserRequestDtoListCommand.class
 com\epam\pharmacy\domain\OrderMedicine.class
 com\epam\pharmacy\command\CommandResult.class
-com\epam\pharmacy\dto\OrderDto.class
 com\epam\pharmacy\dao\DaoCreator.class
 com\epam\pharmacy\domain\enumeration\Role.class
 com\epam\pharmacy\connection\ConnectionPool.class
@@ -39,7 +38,6 @@ com\epam\pharmacy\controller\FrontController.class
 com\epam\pharmacy\dto\RequestDto.class
 com\epam\pharmacy\command\ShowPrescriptionListCommand.class
 com\epam\pharmacy\command\ShowMedicineListCommand.class
-com\epam\pharmacy\command\MainPageCommand.class
 com\epam\pharmacy\dao\UserDao.class
 com\epam\pharmacy\dto\PrescriptionDto.class
 com\epam\pharmacy\exceptions\PharmacyException.class

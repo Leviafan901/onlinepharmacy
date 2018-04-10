@@ -25,7 +25,8 @@ public class ConnectionPool {
 	private static final String PROPERTIES_FILE = "prop.properties";
 	private static ConnectionPool instance = null;
 	private static AtomicBoolean isInstanceAvailable = new AtomicBoolean(true);
-	private static Lock locker = new ReentrantLock();
+	private static Lock instanceLocker = new ReentrantLock();
+	private static Lock resourceLocker = new ReentrantLock();
 	private final static int CONNECTION_POOL_SIZE = 10;
 	private final static int MAX_AWAIT_TIME = 10;
 	private ResourcesList<Connection> connections = null;
@@ -37,14 +38,14 @@ public class ConnectionPool {
 	public static ConnectionPool getInstance() throws ConnectionException {
 		boolean isAvailable = isInstanceAvailable.get();
 		if (isAvailable) {
-			locker.lock();
+			instanceLocker.lock();
 			try {
 				if (instance == null) {
 					instance = new ConnectionPool();
 					isInstanceAvailable.set(false);
 				}
 			} finally {
-				locker.unlock();
+				instanceLocker.unlock();
 			}
 		}
 		return instance;
@@ -59,7 +60,7 @@ public class ConnectionPool {
 	    	    		getProperties().getProperty(DB_URL),
 	    	    		getProperties().getProperty(USER),
 	    	    		getProperties().getProperty(PASSWORD));
-				connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);//
+				connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
 				connections.addResource(connection);
 			}
 		} catch (SQLException | ClassNotFoundException e) {
@@ -80,22 +81,22 @@ public class ConnectionPool {
     }
 
 	public Connection getConnection() {
-		locker.lock();
+		resourceLocker.lock();
 		try {
 			return connections.takeResource();
 		} catch (Exception e) {
 			throw new RuntimeException("Error in a getConnection() , don't avalible connect", e);
 		} finally {
-			locker.unlock();
+			resourceLocker.unlock();
 		}
 	}
 
 	public void returnConnection(Connection connection) {
-		locker.lock();
+		resourceLocker.lock();
 		try {
 			connections.returnResource(connection);
 		} finally {
-			locker.unlock();
+			resourceLocker.unlock();
 		}
 	}
 	

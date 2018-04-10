@@ -23,9 +23,8 @@ public class DeleteMedicineCommand implements Command {
 	
 	@Override
 	public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-		Long medicineId = Long.valueOf(request.getParameter(MEDICINE_ID));
-		
 		try {
+			Long medicineId = Long.valueOf(request.getParameter(MEDICINE_ID));
 		    boolean isDeleted = medicineService.deleteMedicine(medicineId);
 		    if (isDeleted) {
 		    	return new CommandResult(request.getHeader(REFERER), true);

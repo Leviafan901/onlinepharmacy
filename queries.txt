@@ -6,6 +6,10 @@
 		id="WebApp_ID" version="3.0">
 
 
+// requests doctor
+SELECT r.id AS request_id, r.doctor_id, r.status, pres_info.prescription_id, creation_date, expiration_date, user_name, user_lastname FROM (SELECT u.id, u.name AS user_name, u.lastname AS user_lastname, p.id AS prescription_id, p.creation_date, p.expiration_date FROM prescription p
+LEFT JOIN pharmacy.`user` u ON p.user_id = u.id) AS pres_info INNER JOIN request r ON r.prescription_id = pres_info.prescription_id WHERE r.doctor_id = 2
+
 
     <filter>  
     	<filter-name>default</filter-name>

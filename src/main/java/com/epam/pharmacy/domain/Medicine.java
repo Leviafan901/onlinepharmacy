@@ -96,47 +96,64 @@ public class Medicine implements Identifiable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Medicine other = (Medicine) obj;
 		if (count == null) {
-			if (other.count != null)
+			if (other.count != null) {
 				return false;
-		} else if (!count.equals(other.count))
+			}
+		} else if (!count.equals(other.count)) {
 			return false;
+		}
 		if (countInStore == null) {
-			if (other.countInStore != null)
+			if (other.countInStore != null) {
 				return false;
-		} else if (!countInStore.equals(other.countInStore))
+			}
+		} else if (!countInStore.equals(other.countInStore)) {
 			return false;
-		if (deleted != other.deleted)
+		}
+		if (deleted != other.deleted) {
 			return false;
+		}
 		if (dosageMg == null) {
-			if (other.dosageMg != null)
+			if (other.dosageMg != null) {
 				return false;
-		} else if (!dosageMg.equals(other.dosageMg))
+			}
+		} else if (!dosageMg.equals(other.dosageMg)) {
 			return false;
+		}
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
-		if (needPrescription != other.needPrescription)
+		}
+		if (needPrescription != other.needPrescription) {
 			return false;
+		}
 		if (price == null) {
-			if (other.price != null)
+			if (other.price != null) {
 				return false;
-		} else if (!price.equals(other.price))
+			}
+		} else if (!price.equals(other.price)) {
 			return false;
+		}
 		return true;
 	}
 }

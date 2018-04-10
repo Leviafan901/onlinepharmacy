@@ -19,7 +19,7 @@ public class SelectLanguageCommand implements Command {
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(SelectLanguageCommand.class);
 
-    private static final String LANG = "lang";
+    private static final String LANGUAGE = "lang";
     private static final String REFERER = "referer";
     private static final String CHARACTER_ENCODING = "UTF-8";
     private static final int HOUR = 24;
@@ -28,9 +28,9 @@ public class SelectLanguageCommand implements Command {
     
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        String language = request.getParameter(LANG);
+        String language = request.getParameter(LANGUAGE);
         Config.set(request.getSession(), Config.FMT_LOCALE, new Locale(language));
-        Cookie cookie = new Cookie(LANG, language);
+        Cookie cookie = new Cookie(LANGUAGE, language);
         cookie.setMaxAge(HOUR * MINUTE * SEC);
         response.addCookie(cookie);
         try {

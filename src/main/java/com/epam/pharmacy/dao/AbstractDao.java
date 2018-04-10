@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.lang.Long;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.epam.pharmacy.dto.Dto;
 import com.epam.pharmacy.exceptions.DaoException;
 
 /**
@@ -22,12 +20,9 @@ import com.epam.pharmacy.exceptions.DaoException;
  * @param <Long>
  *            PrimaryKey - Long
  */
-public abstract class AbstractDao<T extends Identifiable> implements GenericDao<T> {
+public abstract class AbstractDao<T extends Identifiable, D extends Dto> implements GenericDao<T> {
 
 	private static final int RESULT_OBJECT = 0;
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDao.class);
-
 	private Connection connection;
 
 	public AbstractDao(Connection connection) throws DaoException {
@@ -74,6 +69,11 @@ public abstract class AbstractDao<T extends Identifiable> implements GenericDao<
 	 * Method, parse ResultSet and build entity object.
 	 */
 	protected abstract T build(ResultSet resultSet) throws SQLException;
+	
+	/**
+	 * Method, parse ResultSet and build entity object.
+	 */
+	protected abstract D buildDto(ResultSet resultSet) throws SQLException;
 
 	/**
 	 * Method, determinate insert-query to DB with the field's of argument object.
@@ -85,12 +85,13 @@ public abstract class AbstractDao<T extends Identifiable> implements GenericDao<
 	 */
 	protected abstract void prepareStatementForUpdate(PreparedStatement statement, T object) throws DaoException;
 
-	public T executeQueryForSingleResult(String query, Object... params) throws DaoException {
+	public Optional<T> executeQueryForSingleResult(String query, Object... params) throws DaoException {
 		List<T> objects = executeQuery(query, params);
 		if (objects.isEmpty()) {
 			return null;
 		}
-		return objects.get(RESULT_OBJECT);
+		Optional<T> result = Optional.of(objects.get(RESULT_OBJECT));
+		return result;
 	}
 
 	protected List<T> executeQuery(String query, Object... params) throws DaoException {
@@ -105,6 +106,36 @@ public abstract class AbstractDao<T extends Identifiable> implements GenericDao<
 			throw new DaoException("Can't execute query!", e);
 		}
 		return list;
+	}
+	
+	protected List<D> executeQueryDto(String query, Object... params) throws DaoException {
+		List<D> list = new ArrayList<>();
+		try (PreparedStatement statement = createStatement(query, params)) {
+			try (ResultSet resultSet = statement.executeQuery()) {
+				while (resultSet.next()) {
+					list.add(buildDto(resultSet));
+				}
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Can't execute query!", e);
+		}
+		return list;
+	}
+	
+	protected boolean executeUpdateQuery(String query, Object... params) throws DaoException {
+		try (PreparedStatement statement = createStatement(query, params)) {
+			int count = statement.executeUpdate();
+			boolean updated = count == 1;
+			if (!updated) {
+				throw new DaoException("On update modify more then 1 record: " + count);
+			}
+			if (updated) {
+				return true;
+			}
+		} catch (Exception e) {
+			throw new DaoException("Can not updatedata from the DB!", e);
+		}
+		return false;
 	}
 
 	protected PreparedStatement createStatement(String query, Object... params) throws SQLException {
@@ -137,21 +168,26 @@ public abstract class AbstractDao<T extends Identifiable> implements GenericDao<
 	}
 
 	@Override
-	public T getById(Long key) throws DaoException {
+	public Optional<T> getById(Long key) throws DaoException {
 		return executeQueryForSingleResult(getQueryById(), key);
 	}
 
 	@Override
-	public void update(T object) throws DaoException {
+	public boolean update(T object) throws DaoException {//
 		try (PreparedStatement preparedStatement = connection.prepareStatement(getUpdateQuery())) {
 			prepareStatementForUpdate(preparedStatement, object);
 			int count = preparedStatement.executeUpdate();
-			if (count != 1) {
+			boolean updated = count == 1;
+			if (!updated) {
 				throw new DaoException("On update modify more then 1 record: " + count);
+			}
+			if (updated) {
+				return true;
 			}
 		} catch (Exception e) {
 			throw new DaoException("Can not updatedata from the DB!", e);
 		}
+		return false;
 	}
 
 	@Override

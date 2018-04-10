@@ -1,6 +1,5 @@
 package com.epam.pharmacy.domain;
 
-import java.math.BigDecimal;
 
 import com.epam.pharmacy.dao.Identifiable;
 import com.epam.pharmacy.domain.enumeration.Role;
@@ -77,40 +76,54 @@ public class User implements Identifiable {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		User other = (User) obj;
 		if (id == null) {
-			if (other.id != null)
+			if (other.id != null) {
 				return false;
-		} else if (!id.equals(other.id))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
+		}
 		if (lastname == null) {
-			if (other.lastname != null)
+			if (other.lastname != null) {
 				return false;
-		} else if (!lastname.equals(other.lastname))
+			}
+		} else if (!lastname.equals(other.lastname)) {
 			return false;
+		}
 		if (login == null) {
-			if (other.login != null)
+			if (other.login != null) {
 				return false;
-		} else if (!login.equals(other.login))
+			}
+		} else if (!login.equals(other.login)) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		if (password == null) {
-			if (other.password != null)
+			if (other.password != null) {
 				return false;
-		} else if (!password.equals(other.password))
+			}
+		} else if (!password.equals(other.password)) {
 			return false;
-		if (role != other.role)
+		}
+		if (role != other.role) {
 			return false;
+		}
 		return true;
 	}
 }

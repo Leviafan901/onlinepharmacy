@@ -4,8 +4,9 @@ import java.time.LocalDate;
 
 import com.epam.pharmacy.domain.enumeration.RequestStatus;
 
-public class RequestDto {
+public class RequestDto implements Dto {
 
+	private Long doctorId;
 	private Long requestId;
 	private Long prescriptionId;
 	private RequestStatus status;
@@ -14,6 +15,14 @@ public class RequestDto {
 	private String userName;
 	private String userLastname;
 	
+	public Long getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(Long doctorId) {
+		this.doctorId = doctorId;
+	}
+
 	public Long getRequestId() {
 		return requestId;
 	}
